@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid Diagram Export</title>
+    <!-- Load Mermaid.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
+    <style>
+        #download-link {
+            margin-top: 20px;
+            display: none; /* Hide the download link until the diagram is ready */
+        }
+    </style>
+</head>
+<body>
+    <h1>Mermaid Diagram Export Example</h1>
+    <!-- Mermaid diagram container -->
+    <div id="diagram-container" class="mermaid">
+        graph TD
+        A[Start] --> B[Process]
+        B --> C[End]
+    </div>
+    <!-- Download link -->
+    <a id="download-link" href="#" download="diagram.svg">Download SVG</a>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ startOnLoad: true });
+
+        // Function to handle rendering and exporting the diagram
+        function setupExport() {
+            // Get the diagram container
+            const diagramContainer = document.getElementById('diagram-container');
+
+            // Check if the SVG has been rendered
+            const svgElement = diagramContainer.querySelector('svg');
+            if (!svgElement) {
+                console.error('Mermaid rendered the diagram visually, but SVG is not available yet.');
+                return;
+            }
+
+            // Serialize the SVG to a string
+            const serializer = new XMLSerializer();
+            const svgString = serializer.serializeToString(svgElement);
+
+            // Create a Blob for the SVG and generate a download link
+            const blob = new Blob([svgString], { type: 'image/svg+xml' });
+            const link = document.getElementById('download-link');
+            link.href = URL.createObjectURL(blob);
+            link.style.display = 'block'; // Show the download link
+        }
+
+        // Ensure Mermaid.js finishes processing before setting up the export
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(setupExport, 500); // Delay slightly to ensure rendering completes
+        });
+    </script>
+</body>
+</html>
