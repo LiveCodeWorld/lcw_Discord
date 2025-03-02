@@ -1,5 +1,5 @@
 ﻿script "init"
 on preOpenStack
-   answer "Hello world!"
+   answer "Hello hitchhiker!"
    pass preOpenStack
 end preOpenStack
