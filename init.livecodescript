@@ -1,36 +1,45 @@
 ﻿script "init"
+--> Metadata
+-
+/*
+This stack script is a custom init script specifc to one project.
+In this case the lcw_Discord project.
+*/
+
+
 --> Events
 -
 on preOpenStack
-   put the ghurl_Url ["index.html"] of me into gURL
-   go to stack url gURL 
+   put the ghurl_Url of me into indexURL
+   --
+   put _BrowserWidget() into bWidget
+   set the url of bWidget to gURL
    pass preOpenStack
 end preOpenStack
+
+private function _BrowserWidget
+   put _ProjectName() into sName
+   put the long id of widget 1 of stack sName into bWidget
+   return bWidget
+end _BrowserWidget
+
+private function _ProjectName
+   return "lcw_Discord"
+end _ProjectName
 
 
 --> Deps
 -
-getprop ghurl_Url [pShortFile]
+getprop lcw_Url [pShortFile]
    if pShortFile is empty then
-      put "init.livecodescript" into pShortFile
+      put "index.html" into pShortFile
    end if
-   get the my_ProjectName of me
-   return ghurl_Url (pShortFile, it)
-end ghurl_Url
+   put _ProjectName() into pName
+   return lcw_ConstructUrl (pShortFile, pName)
+end lcw_Url
 
-getprop my_ProjectName
-   get the effective filename of the defaultstack
-   set the itemdelimiter to slash
-   return item -2 of it
-end my_ProjectName
-
-function ghurl_Url shortFile, projectName
-   put ghurl_BaseUrl() into gURL
-   put projectName & slash after gURL
+function lcw_ConstructUrl shortFile, projectName
+   put "https://" & projectName & ".livecode.wiki/" into gURL
    put shortFile after gURL
    return gURL
-end ghurl_Url
-
-function ghurl_BaseUrl
-   return "https://livecodeworld.github.io/"
-end ghurl_BaseUrl
+end lcw_ConstructUrl
